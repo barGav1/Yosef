@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import resumeIcon from "../Files/Resume_icon.png";
+import { Link } from "react-router-dom";
 
 // InputField component for text inputs
 const InputField = ({ label, name, value, placeholder, onChange }) => (
@@ -435,386 +437,392 @@ const ResumeMaker = () => {
   };
 
   return (
-    <div className="mx-auto px-4 py-4 flex flex-row">
-      <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-300">
-        <h1 className="text-xl font-bold mb-4">Enter Your Info</h1>
-        <form className="space-y-4">
-          <InputField
-            label="Name"
-            name="name"
-            value={userData.name}
-            placeholder="Enter your name"
-            onChange={(e) => handleChange(e)}
-          />
-          <InputField
-            label="Email"
-            name="email"
-            value={userData.email}
-            placeholder="Enter your email address"
-            onChange={(e) => handleChange(e)}
-          />
-          <InputField
-            label="LinkedIn Profile URL"
-            name="linkedin"
-            value={userData.linkedin}
-            placeholder="Enter your LinkedIn URL (optional)"
-            onChange={(e) => handleChange(e)}
-          />
-          <InputField
-            label="GitHub Profile URL"
-            name="github"
-            value={userData.github}
-            placeholder="Enter your GitHub URL (optional)"
-            onChange={(e) => handleChange(e)}
-          />
-          <TextAreaField
-            label="Summary"
-            name="summary"
-            value={userData.summary}
-            placeholder="Write a brief overview of yourself and your skills"
-            onChange={(e) => handleChange(e)}
-          />
+    <div>
+      <Link to="/" className="-m-1.5 p-1.5">
+        <span className="sr-only">Your Company</span>
+        <img className="h-16 w-auto" src={resumeIcon} alt="" />
+      </Link>
+      <div className="mx-auto px-4 py-4 flex flex-row">
+        <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-300">
+          <h1 className="text-xl font-bold mb-4">Enter Your Info</h1>
+          <form className="space-y-4">
+            <InputField
+              label="Name"
+              name="name"
+              value={userData.name}
+              placeholder="Enter your name"
+              onChange={(e) => handleChange(e)}
+            />
+            <InputField
+              label="Email"
+              name="email"
+              value={userData.email}
+              placeholder="Enter your email address"
+              onChange={(e) => handleChange(e)}
+            />
+            <InputField
+              label="LinkedIn Profile URL"
+              name="linkedin"
+              value={userData.linkedin}
+              placeholder="Enter your LinkedIn URL (optional)"
+              onChange={(e) => handleChange(e)}
+            />
+            <InputField
+              label="GitHub Profile URL"
+              name="github"
+              value={userData.github}
+              placeholder="Enter your GitHub URL (optional)"
+              onChange={(e) => handleChange(e)}
+            />
+            <TextAreaField
+              label="Summary"
+              name="summary"
+              value={userData.summary}
+              placeholder="Write a brief overview of yourself and your skills"
+              onChange={(e) => handleChange(e)}
+            />
 
-          <h1>Experiences</h1>
-          {userData.experiences.map((exp, i) => (
-            <div key={i}>
-              <div className="flex flex-row">
-                <div className="flex-grow mb-4">
-                  <InputField
-                    label={`Title - experience ${i + 1}`}
-                    name="title"
-                    value={exp.title}
-                    placeholder="Job Title"
-                    onChange={(e) => handleChange(e, i, "experiences")}
-                  />
-                </div>
-                <div className="flex-grow mb-4 ml-1">
-                  <InputField
-                    label={`Workplace Name - experience ${i + 1}`}
-                    name="workplace"
-                    value={exp.workplace}
-                    placeholder="Name of your place of work"
-                    onChange={(e) => handleChange(e, i, "experiences")}
-                  />
-                </div>
-              </div>
-              <div className="flex flex-row justify-between">
-                <YearDropdown
-                  label="From Year"
-                  name="startYear"
-                  value={exp.startYear}
-                  onChange={(e) => handleChange(e, i, "experiences")}
-                />
-                <MonthDropdown
-                  label="From Month"
-                  name="startMonth"
-                  value={exp.startMonth}
-                  onChange={(e) => handleChange(e, i, "experiences")}
-                />
-                <YearDropdown
-                  label="To Year"
-                  name="endYear"
-                  value={exp.endYear}
-                  onChange={(e) => handleChange(e, i, "experiences")}
-                />
-                <MonthDropdown
-                  label="To Month"
-                  name="endMonth"
-                  value={exp.endMonth}
-                  onChange={(e) => handleChange(e, i, "experiences")}
-                />
-              </div>
-              <TextAreaField
-                label="Description"
-                name="description"
-                value={exp.description}
-                placeholder="Description of your work experience"
-                onChange={(e) => handleChange(e, i, "experiences")}
-              />
-            </div>
-          ))}
-          <div className="flex flex-row justify-evenly">
-            <button
-              className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-slate-100"
-              onClick={addExp}
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 4v16m8-8H4"
-                ></path>
-              </svg>
-            </button>
-            <button
-              className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-slate-100"
-              onClick={removeExp}
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M20 12H4"
-                ></path>
-              </svg>
-            </button>
-          </div>
-
-          <h1>Education</h1>
-          {userData.education.map((edu, index) => (
-            <div key={index}>
-              <div className="flex flex-row">
-                <div className="flex-grow mb-4">
-                  <InputField
-                    label={`Degree - education ${index + 1}`}
-                    name="degree"
-                    value={edu.degree}
-                    placeholder="Degree"
-                    onChange={(e) => handleChange(e, index, "education")}
-                  />
-                </div>
-                <div className="flex-grow mb-4 ml-1">
-                  <InputField
-                    label={`Institution Name - education ${index + 1}`}
-                    name="institution"
-                    value={edu.institution}
-                    placeholder="Institution"
-                    onChange={(e) => handleChange(e, index, "education")}
-                  />
-                </div>
-              </div>
-              <div className="flex flex-row justify-between">
-                <YearDropdown
-                  label="From Year"
-                  name="startYear"
-                  value={edu.startYear}
-                  onChange={(e) => handleChange(e, index, "education")}
-                />
-                <YearDropdown
-                  label="To Year"
-                  name="endYear"
-                  value={edu.endYear}
-                  onChange={(e) => handleChange(e, index, "education")}
-                />
-              </div>
-            </div>
-          ))}
-          <div className="flex flex-row justify-evenly">
-            <button
-              className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-slate-100"
-              onClick={addEducation}
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 4v16m8-8H4"
-                ></path>
-              </svg>
-            </button>
-            <button
-              className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-slate-100"
-              onClick={removeEducation}
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M20 12H4"
-                ></path>
-              </svg>
-            </button>
-          </div>
-          <h1>Skills</h1>
-          <div className="grid grid-cols-4 gap-4">
-            {Array.from({ length: skillCounter }, (_, i) => (
-              <InputField
-                key={i + 1}
-                placeholder={`Skill ${i + 1}`}
-                name={`skill${i + 1}`}
-                onChange={(e) => handleChange(e, i, "skills")}
-                value={userData.skills[i] || ""}
-              />
-            ))}
-          </div>
-          <div className="flex flex-row justify-evenly">
-            <button
-              className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-slate-100"
-              onClick={addSkill}
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 4v16m8-8H4"
-                ></path>
-              </svg>
-            </button>
-            <button
-              className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-slate-100"
-              onClick={removeSkill}
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M20 12H4"
-                ></path>
-              </svg>
-            </button>
-          </div>
-
-          <h1>Languages</h1>
-          <div className="grid grid-cols-4 gap-4">
-            {userData.languages.map((lang, i) => (
+            <h1>Experiences</h1>
+            {userData.experiences.map((exp, i) => (
               <div key={i}>
-                <InputField
-                  name={`lang`}
-                  placeholder="Language"
-                  onChange={(e) => handleChange(e, i, "languages")}
-                  value={lang.lang}
-                  label={`name - language ${i + 1}`}
-                />
-                <LevelsDropdown
-                  name={`level`}
-                  value={lang.level}
-                  onChange={(e) => handleChange(e, i, "languages")}
-                  label={`level - language ${i + 1}`}
+                <div className="flex flex-row">
+                  <div className="flex-grow mb-4">
+                    <InputField
+                      label={`Title - experience ${i + 1}`}
+                      name="title"
+                      value={exp.title}
+                      placeholder="Job Title"
+                      onChange={(e) => handleChange(e, i, "experiences")}
+                    />
+                  </div>
+                  <div className="flex-grow mb-4 ml-1">
+                    <InputField
+                      label={`Workplace Name - experience ${i + 1}`}
+                      name="workplace"
+                      value={exp.workplace}
+                      placeholder="Name of your place of work"
+                      onChange={(e) => handleChange(e, i, "experiences")}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-row justify-between">
+                  <YearDropdown
+                    label="From Year"
+                    name="startYear"
+                    value={exp.startYear}
+                    onChange={(e) => handleChange(e, i, "experiences")}
+                  />
+                  <MonthDropdown
+                    label="From Month"
+                    name="startMonth"
+                    value={exp.startMonth}
+                    onChange={(e) => handleChange(e, i, "experiences")}
+                  />
+                  <YearDropdown
+                    label="To Year"
+                    name="endYear"
+                    value={exp.endYear}
+                    onChange={(e) => handleChange(e, i, "experiences")}
+                  />
+                  <MonthDropdown
+                    label="To Month"
+                    name="endMonth"
+                    value={exp.endMonth}
+                    onChange={(e) => handleChange(e, i, "experiences")}
+                  />
+                </div>
+                <TextAreaField
+                  label="Description"
+                  name="description"
+                  value={exp.description}
+                  placeholder="Description of your work experience"
+                  onChange={(e) => handleChange(e, i, "experiences")}
                 />
               </div>
             ))}
-          </div>
-          <div className="flex flex-row justify-evenly">
-            <button
-              className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-slate-100"
-              onClick={addLanguage}
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
+            <div className="flex flex-row justify-evenly">
+              <button
+                className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-slate-100"
+                onClick={addExp}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 4v16m8-8H4"
-                ></path>
-              </svg>
-            </button>
-            <button
-              className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-slate-100"
-              onClick={removeLanguage}
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 4v16m8-8H4"
+                  ></path>
+                </svg>
+              </button>
+              <button
+                className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-slate-100"
+                onClick={removeExp}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M20 12H4"
-                ></path>
-              </svg>
-            </button>
-          </div>
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M20 12H4"
+                  ></path>
+                </svg>
+              </button>
+            </div>
 
-          <h1>Military Service</h1>
-          <div>
-            <div className="flex flex-row">
-              <div className="flex-grow mb-4">
+            <h1>Education</h1>
+            {userData.education.map((edu, index) => (
+              <div key={index}>
+                <div className="flex flex-row">
+                  <div className="flex-grow mb-4">
+                    <InputField
+                      label={`Degree - education ${index + 1}`}
+                      name="degree"
+                      value={edu.degree}
+                      placeholder="Degree"
+                      onChange={(e) => handleChange(e, index, "education")}
+                    />
+                  </div>
+                  <div className="flex-grow mb-4 ml-1">
+                    <InputField
+                      label={`Institution Name - education ${index + 1}`}
+                      name="institution"
+                      value={edu.institution}
+                      placeholder="Institution"
+                      onChange={(e) => handleChange(e, index, "education")}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-row justify-between">
+                  <YearDropdown
+                    label="From Year"
+                    name="startYear"
+                    value={edu.startYear}
+                    onChange={(e) => handleChange(e, index, "education")}
+                  />
+                  <YearDropdown
+                    label="To Year"
+                    name="endYear"
+                    value={edu.endYear}
+                    onChange={(e) => handleChange(e, index, "education")}
+                  />
+                </div>
+              </div>
+            ))}
+            <div className="flex flex-row justify-evenly">
+              <button
+                className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-slate-100"
+                onClick={addEducation}
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 4v16m8-8H4"
+                  ></path>
+                </svg>
+              </button>
+              <button
+                className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-slate-100"
+                onClick={removeEducation}
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M20 12H4"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+            <h1>Skills</h1>
+            <div className="grid grid-cols-4 gap-4">
+              {Array.from({ length: skillCounter }, (_, i) => (
                 <InputField
-                  label="Role"
-                  name="role"
-                  value={userData.militaryService.role}
-                  placeholder="Role"
+                  key={i + 1}
+                  placeholder={`Skill ${i + 1}`}
+                  name={`skill${i + 1}`}
+                  onChange={(e) => handleChange(e, i, "skills")}
+                  value={userData.skills[i] || ""}
+                />
+              ))}
+            </div>
+            <div className="flex flex-row justify-evenly">
+              <button
+                className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-slate-100"
+                onClick={addSkill}
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 4v16m8-8H4"
+                  ></path>
+                </svg>
+              </button>
+              <button
+                className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-slate-100"
+                onClick={removeSkill}
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M20 12H4"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+
+            <h1>Languages</h1>
+            <div className="grid grid-cols-4 gap-4">
+              {userData.languages.map((lang, i) => (
+                <div key={i}>
+                  <InputField
+                    name={`lang`}
+                    placeholder="Language"
+                    onChange={(e) => handleChange(e, i, "languages")}
+                    value={lang.lang}
+                    label={`name - language ${i + 1}`}
+                  />
+                  <LevelsDropdown
+                    name={`level`}
+                    value={lang.level}
+                    onChange={(e) => handleChange(e, i, "languages")}
+                    label={`level - language ${i + 1}`}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-row justify-evenly">
+              <button
+                className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-slate-100"
+                onClick={addLanguage}
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 4v16m8-8H4"
+                  ></path>
+                </svg>
+              </button>
+              <button
+                className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-slate-100"
+                onClick={removeLanguage}
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M20 12H4"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+
+            <h1>Military Service</h1>
+            <div>
+              <div className="flex flex-row">
+                <div className="flex-grow mb-4">
+                  <InputField
+                    label="Role"
+                    name="role"
+                    value={userData.militaryService.role}
+                    placeholder="Role"
+                    onChange={(e) => handleChange(e, 0, "militaryService")}
+                  />
+                </div>
+                <div className="flex-grow mb-4 ml-1">
+                  <InputField
+                    label="Unit"
+                    name="unit"
+                    value={userData.militaryService.unit}
+                    placeholder="Unit"
+                    onChange={(e) => handleChange(e, 0, "militaryService")}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-row justify-between">
+                <YearDropdown
+                  label="From Year"
+                  name="startYear"
+                  value={userData.militaryService.startYear}
                   onChange={(e) => handleChange(e, 0, "militaryService")}
                 />
-              </div>
-              <div className="flex-grow mb-4 ml-1">
-                <InputField
-                  label="Unit"
-                  name="unit"
-                  value={userData.militaryService.unit}
-                  placeholder="Unit"
+                <YearDropdown
+                  label="To Year"
+                  name="endYear"
+                  value={userData.militaryService.endYear}
                   onChange={(e) => handleChange(e, 0, "militaryService")}
                 />
               </div>
             </div>
-            <div className="flex flex-row justify-between">
-              <YearDropdown
-                label="From Year"
-                name="startYear"
-                value={userData.militaryService.startYear}
-                onChange={(e) => handleChange(e, 0, "militaryService")}
-              />
-              <YearDropdown
-                label="To Year"
-                name="endYear"
-                value={userData.militaryService.endYear}
-                onChange={(e) => handleChange(e, 0, "militaryService")}
-              />
-            </div>
-          </div>
 
-          <button
-            type="button"
-            onClick={handleSave}
-            className="w-full bg-indigo-600 text-white p-3 rounded-md mt-4 hover:bg-indigo-700"
-          >
-            Save
-          </button>
-        </form>
+            <button
+              type="button"
+              onClick={handleSave}
+              className="w-full bg-indigo-600 text-white p-3 rounded-md mt-4 hover:bg-indigo-700"
+            >
+              Save
+            </button>
+          </form>
+        </div>
+        <div className="flex-grow ml-4">{generateResumePreview()}</div>
       </div>
-      <div className="flex-grow ml-4">{generateResumePreview()}</div>
     </div>
   );
 };
