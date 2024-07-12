@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import resumeIcon from "../Files/Resume_icon.png";
 import { Link } from "react-router-dom";
+import { useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 
 // InputField component for text inputs
 const InputField = ({ label, name, value, placeholder, onChange }) => (
@@ -298,7 +300,10 @@ const ResumeMaker = () => {
   };
 
   const generateResumePreview = () => (
-    <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-300 w-full">
+    <div
+      id="resume-preview"
+      className="bg-white p-6 rounded-lg shadow-lg border border-gray-300 w-full"
+    >
       {/* Header */}
       <div className="border-b border-gray-300 pb-6 mb-6 text-center">
         <h1 className="text-4xl font-extrabold text-gray-900">
@@ -435,6 +440,12 @@ const ResumeMaker = () => {
   const handleSave = () => {
     console.log("Saved Data:", userData);
   };
+
+  const componentRef = useRef();
+
+  const handleDownload = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   return (
     <div>
@@ -821,7 +832,16 @@ const ResumeMaker = () => {
             </button>
           </form>
         </div>
-        <div className="flex-grow ml-4">{generateResumePreview()}</div>
+        <div className="flex-grow ml-4">
+          <div ref={componentRef}>{generateResumePreview()}</div>
+          <button
+            type="button"
+            onClick={handleDownload}
+            className="w-full bg-green-600 text-white p-3 rounded-md mt-4 hover:bg-green-700"
+          >
+            Download
+          </button>
+        </div>
       </div>
     </div>
   );
