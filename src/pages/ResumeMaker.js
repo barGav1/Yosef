@@ -1,10 +1,15 @@
-import React, { useState } from "react";
-import resumeIcon from "../Files/Resume_icon.png";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import HomeIcon from "../Files/Home.png";
+import ResumeViewer from "../Files/ResumeViewer.png";
 import { Link } from "react-router-dom";
 import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
+import Cookies from "js-cookie";
+import axios from "axios";
 
-// InputField component for text inputs
+const userId = Cookies.get("userId");
 const InputField = ({ label, name, value, placeholder, onChange }) => (
   <div className="mb-4">
     <label
@@ -25,7 +30,6 @@ const InputField = ({ label, name, value, placeholder, onChange }) => (
   </div>
 );
 
-// TextAreaField component for larger text inputs
 const TextAreaField = ({ label, name, value, placeholder, onChange }) => (
   <div className="form-group mb-4">
     <label
@@ -45,7 +49,6 @@ const TextAreaField = ({ label, name, value, placeholder, onChange }) => (
   </div>
 );
 
-// MonthDropdown component for selecting months
 const MonthDropdown = ({ label, name, value, onChange }) => (
   <div className="form-group mb-4">
     <label
@@ -71,7 +74,6 @@ const MonthDropdown = ({ label, name, value, onChange }) => (
   </div>
 );
 
-// YearDropdown component for selecting years
 const YearDropdown = ({ label, name, value, onChange }) => (
   <div className="form-group mb-4">
     <label
@@ -97,7 +99,6 @@ const YearDropdown = ({ label, name, value, onChange }) => (
   </div>
 );
 
-// LevelsDropdown component for selecting skill levels
 const LevelsDropdown = ({ label, name, value, onChange }) => (
   <div className="form-group mb-4">
     <label
@@ -123,7 +124,6 @@ const LevelsDropdown = ({ label, name, value, onChange }) => (
   </div>
 );
 
-// Constants for dropdown options
 const months = [...Array(12).keys()].map((i) => ({
   value: i + 1,
   label: new Date(0, i).toLocaleString("en", { month: "long" }),
@@ -137,8 +137,10 @@ const levels = [
   { value: 4, label: "Expert" },
 ];
 
-// Main ResumeMaker component
 const ResumeMaker = () => {
+  const { resumeNumber } = useParams();
+  const navigate = useNavigate();
+
   const initialUserData = {
     name: "",
     email: "",
@@ -167,6 +169,27 @@ const ResumeMaker = () => {
   const [expCounter, setExpCounter] = useState(1);
   const [eduCounter, setEduCounter] = useState(1);
   const [langCounter, setLangCounter] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (userId && resumeNumber) {
+        try {
+          const response = await axios.get(
+            `http://localhost:8000/users/${userId}/resumes/${resumeNumber}`
+          );
+          if (response.status === 200) {
+            setUserData(response.data);
+          }
+        } catch (error) {
+          console.error("Error fetching resume data:", error);
+          navigate("/"); // Redirect if there is an error
+        }
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, [resumeNumber, navigate]);
 
   const handleChange = (event, index, section) => {
     const { name, value } = event.target;
@@ -277,6 +300,7 @@ const ResumeMaker = () => {
     }
     event.preventDefault();
   };
+
   const addLanguage = (event) => {
     if (langCounter < 4) {
       setLangCounter(langCounter + 1);
@@ -304,7 +328,6 @@ const ResumeMaker = () => {
       id="resume-preview"
       className="bg-white p-6 rounded-lg shadow-lg border border-gray-300 w-full"
     >
-      {/* Header */}
       <div className="border-b border-gray-300 pb-6 mb-6 text-center">
         <h1 className="text-4xl font-extrabold text-gray-900">
           {userData.name}
@@ -341,14 +364,12 @@ const ResumeMaker = () => {
           </li>
         </ul>
       </div>
-      {/* Summary */}
       <section className="mb-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-4 border-b border-gray-300 pb-2">
           Summary
         </h2>
         <p className="text-gray-700">{userData.summary}</p>
       </section>
-      {/* Experience */}
       <section className="mb-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-4 border-b border-gray-300 pb-2">
           Experience
@@ -368,7 +389,6 @@ const ResumeMaker = () => {
           ))}
         </ul>
       </section>
-      {/* Education */}
       <section className="mb-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-4 border-b border-gray-300 pb-2">
           Education
@@ -386,7 +406,6 @@ const ResumeMaker = () => {
           ))}
         </ul>
       </section>
-      {/* Military Service */}
       {userData.militaryService.role && (
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4 border-b border-gray-300 pb-2">
@@ -403,8 +422,7 @@ const ResumeMaker = () => {
             </span>
           </div>
         </section>
-      )}{" "}
-      {/* Skills */}
+      )}
       <section className="mb-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-4 border-b border-gray-300 pb-2">
           Skills
@@ -417,7 +435,6 @@ const ResumeMaker = () => {
           ))}
         </ul>
       </section>
-      {/* Languages */}
       <section>
         <h2 className="text-2xl font-bold text-gray-800 mb-4 border-b border-gray-300 pb-2">
           Languages
@@ -437,8 +454,51 @@ const ResumeMaker = () => {
     </div>
   );
 
-  const handleSave = () => {
-    console.log("Saved Data:", userData);
+  const handleSave = async () => {
+    const userId = Cookies.get("userId");
+    if (!userId) {
+      alert("Please Login To Save a Resume");
+    } else {
+      const resolvedResumeNumber = resumeNumber || "0";
+      const payload = {
+        ...userData,
+        user_id: userId,
+        resume_number: resolvedResumeNumber,
+      };
+      console.log(payload);
+      try {
+        let response;
+        if (resolvedResumeNumber !== "0") {
+          response = await axios.put(
+            `http://localhost:8000/users/${userId}/resumes/${resolvedResumeNumber}`,
+            payload
+          );
+        } else {
+          response = await axios.post(
+            "http://localhost:8000/resumes/",
+            payload
+          );
+        }
+
+        if (response.status === 200) {
+          alert("Resume saved successfully!");
+        } else {
+          alert("Failed to save resume. Please try again.");
+        }
+      } catch (error) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.detail.includes("409")
+        ) {
+          alert(
+            "You have reached the maximum number of resume slots (4). Please delete an existing resume to save a new one."
+          );
+        } else {
+          alert("An error occurred while saving the resume. Please try again.");
+        }
+      }
+    }
   };
 
   const componentRef = useRef();
@@ -447,12 +507,22 @@ const ResumeMaker = () => {
     content: () => componentRef.current,
   });
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
-      <Link to="/" className="-m-1.5 p-1.5">
-        <span className="sr-only">Your Company</span>
-        <img className="h-16 w-auto" src={resumeIcon} alt="" />
-      </Link>
+      <div className="flex flex-row justify-center align-bottom">
+        <Link to="/" className="-m-1.5 py-1.5">
+          <span className="sr-only">Your Company</span>
+          <img className="h-16 w-auto" src={HomeIcon} alt="" />
+        </Link>
+        <Link to="/ResumeViewer" className="-m-1.5 py-1.5">
+          <span className="sr-only">Your Company</span>
+          <img className="px-5 h-16 w-auto" src={ResumeViewer} alt="" />
+        </Link>
+      </div>
       <div className="mx-auto px-4 py-4 flex flex-row">
         <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-300">
           <h1 className="text-xl font-bold mb-4">Enter Your Info</h1>
@@ -671,6 +741,7 @@ const ResumeMaker = () => {
                 </svg>
               </button>
             </div>
+
             <h1>Skills</h1>
             <div className="grid grid-cols-4 gap-4">
               {Array.from({ length: skillCounter }, (_, i) => (
