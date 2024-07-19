@@ -64,7 +64,7 @@ const ResumeViewer = () => {
       for (const resumeNumber of resumesToFetch) {
         try {
           const response = await axios.get(
-            `https:/resumebackend-production.up.railway.app/${userId}/resumes/${resumeNumber}`
+            `https://resumebackend-production.up.railway.app/${userId}/resumes/${resumeNumber}`
           );
           fetchedResumes.push({
             title: `Resume ${resumeNumber}`,
