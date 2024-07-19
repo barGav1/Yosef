@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import ResumePreview from "./ResumePreview";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-
+import api from "../api.js";
 const Card = ({ title, userData, levels, resumeNumber, onDelete }) => {
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
@@ -20,9 +19,7 @@ const Card = ({ title, userData, levels, resumeNumber, onDelete }) => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(
-        `http://localhost:8000/users/${userData.user_id}/resumes/${resumeNumber}`
-      );
+      await api.delete(`/users/${userData.user_id}/resumes/${resumeNumber}`);
       onDelete(resumeNumber);
     } catch (error) {
       console.error("Error deleting resume:", error);
