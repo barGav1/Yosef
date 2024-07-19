@@ -12,6 +12,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Cookies from "js-cookie";
 import axios from "axios";
+import api from "../api";
 
 // Define constant values and default resume object
 const levels = [
@@ -63,8 +64,8 @@ const ResumeViewer = () => {
       const fetchedResumes = [];
       for (const resumeNumber of resumesToFetch) {
         try {
-          const response = await axios.get(
-            `https://resumebackend-production.up.railway.app/${userId}/resumes/${resumeNumber}`
+          const response = await api.get(
+            `/users/${userId}/resumes/${resumeNumber}`
           );
           fetchedResumes.push({
             title: `Resume ${resumeNumber}`,
