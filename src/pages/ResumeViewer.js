@@ -11,7 +11,6 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Cookies from "js-cookie";
-import axios from "axios";
 import api from "../api";
 
 // Define constant values and default resume object
