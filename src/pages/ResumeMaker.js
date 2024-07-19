@@ -176,7 +176,7 @@ const ResumeMaker = () => {
       if (userId && resumeNumber) {
         try {
           const response = await axios.get(
-            `https://railway.app/project/5365015c-d103-4bcd-ab15-5cc59cc49abd/users/${userId}/resumes/${resumeNumber}`
+            `https:/resumebackend-production.up.railway.app/users/${userId}/resumes/${resumeNumber}`
           );
           if (response.status === 200) {
             setUserData(response.data);
@@ -470,12 +470,12 @@ const ResumeMaker = () => {
         let response;
         if (resolvedResumeNumber !== "0") {
           response = await axios.put(
-            `https://railway.app/project/5365015c-d103-4bcd-ab15-5cc59cc49abd/${userId}/resumes/${resolvedResumeNumber}`,
+            `https:/resumebackend-production.up.railway.app/${userId}/resumes/${resolvedResumeNumber}`,
             payload
           );
         } else {
           response = await axios.post(
-            "https://railway.app/project/5365015c-d103-4bcd-ab15-5cc59cc49abd/resumes/",
+            "https:/resumebackend-production.up.railway.app/resumes/",
             payload
           );
         }
