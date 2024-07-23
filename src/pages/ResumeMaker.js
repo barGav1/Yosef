@@ -349,7 +349,7 @@ const ResumeMaker = () => {
               rel="noopener noreferrer"
               className="text-blue-600 hover:underline"
             >
-              LinkedIn
+              {userData.linkedin ? "LinkedIn" : ""}
             </a>
           </li>
           <li>
@@ -359,7 +359,7 @@ const ResumeMaker = () => {
               rel="noopener noreferrer"
               className="text-blue-600 hover:underline"
             >
-              GitHub
+              {userData.github ? "GitHub" : ""}
             </a>
           </li>
         </ul>
