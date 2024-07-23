@@ -21,7 +21,24 @@ const Register = () => {
   };
 
   const validatePassword = (password) => {
-    return password.length >= 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const isLongEnough = password.length >= 9;
+
+    if (!isLongEnough) {
+      return "Password must be at least 9 characters long.";
+    }
+    if (!hasUpperCase) {
+      return "Password must include at least one capital letter.";
+    }
+    if (!hasLowerCase) {
+      return "Password must include at least one lowercase letter.";
+    }
+    if (!hasNumber) {
+      return "Password must include at least one number.";
+    }
+    return "";
   };
 
   const registerUser = async (user) => {
@@ -45,33 +62,32 @@ const Register = () => {
       ...formData,
       [name]: value,
     });
+  };
 
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
     if (name === "email") {
       setEmailError(
         validateEmail(value) ? "" : "Please enter a valid email address."
       );
     } else if (name === "password") {
-      setPasswordError(
-        validatePassword(value)
-          ? ""
-          : "Password must be at least 8 characters long."
-      );
+      setPasswordError(validatePassword(value));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setEmailError("");
-    setPasswordError("");
 
-    if (!validateEmail(formData.email)) {
-      setEmailError("Please enter a valid email address.");
-      return;
-    }
+    const emailValidationError = validateEmail(formData.email)
+      ? ""
+      : "Please enter a valid email address.";
+    const passwordValidationError = validatePassword(formData.password);
 
-    if (!validatePassword(formData.password)) {
-      setPasswordError("Password must be at least 8 characters long.");
+    setEmailError(emailValidationError);
+    setPasswordError(passwordValidationError);
+
+    if (emailValidationError || passwordValidationError) {
       return;
     }
 
@@ -124,6 +140,7 @@ const Register = () => {
                     required
                     value={formData.email}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                   />
                   {emailError && (
                     <p className="text-red-500 text-xs mt-1">{emailError}</p>
@@ -147,6 +164,7 @@ const Register = () => {
                     required
                     value={formData.password}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                   />
                   {passwordError && (
                     <p className="text-red-500 text-xs mt-1">{passwordError}</p>
