@@ -513,6 +513,10 @@ const ResumeMaker = () => {
 
   const generatePerfectSummary = async () => {
     try {
+      console.log(
+        "Data being sent to generate summary:",
+        JSON.stringify(userData, null, 2)
+      );
       const response = await axios.post(
         "https://resumebackend-production.up.railway.app/generate-summary",
         userData
@@ -522,6 +526,11 @@ const ResumeMaker = () => {
       }
     } catch (error) {
       console.error("Error generating summary:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+        console.error("Response status:", error.response.status);
+        console.error("Response headers:", error.response.headers);
+      }
       alert("Failed to generate summary. Please try again.");
     }
   };
