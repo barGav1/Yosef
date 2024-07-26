@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import resumeIcon from "../Files/Resume_icon.png";
 import "../styles/Home.css";
-import googleIcon from "../Files/Google.webp";
-import linkedinIcon from "../Files/Linkedin.webp";
 import api from "../api";
 import { useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -161,13 +159,6 @@ function Login() {
                 >
                   Sign In
                 </button>
-                <div className="flex justify-center">
-                  <p> Or continue with</p>
-                </div>
-                <div className="flex flex-row justify-center gap-10">
-                  <img className="h-16 w-auto" src={googleIcon} alt="" />
-                  <img className="h-16 w-auto" src={linkedinIcon} alt="" />
-                </div>
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Don’t have an account yet?{" "}
                   <a

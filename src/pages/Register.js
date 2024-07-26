@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import "../styles/Home.css";
 import resumeIcon from "../Files/Resume_icon.png";
-import googleIcon from "../Files/Google.webp";
-import linkedinIcon from "../Files/Linkedin.webp";
 import api from "../api";
 
 const Register = () => {
@@ -179,21 +177,6 @@ const Register = () => {
                 >
                   Register now!
                 </button>
-                <div className="flex justify-center">
-                  <p>Or continue with</p>
-                </div>
-                <div className="flex flex-row justify-center gap-10">
-                  <img
-                    className="h-16 w-auto"
-                    src={googleIcon}
-                    alt="Google Icon"
-                  />
-                  <img
-                    className="h-16 w-auto"
-                    src={linkedinIcon}
-                    alt="LinkedIn Icon"
-                  />
-                </div>
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Already have an account?{" "}
                   <a
