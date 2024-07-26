@@ -511,6 +511,21 @@ const ResumeMaker = () => {
     return <div>Loading...</div>;
   }
 
+  const generatePerfectSummary = async () => {
+    try {
+      const response = await axios.post(
+        "https://resumebackend-production.up.railway.app/generate-summary",
+        userData
+      );
+      if (response.status === 200) {
+        setUserData({ ...userData, summary: response.data.summary });
+      }
+    } catch (error) {
+      console.error("Error generating summary:", error);
+      alert("Failed to generate summary. Please try again.");
+    }
+  };
+
   return (
     <div>
       <div className="flex flex-row justify-center align-bottom">
@@ -562,7 +577,13 @@ const ResumeMaker = () => {
               placeholder="Write a brief overview of yourself and your skills"
               onChange={(e) => handleChange(e)}
             />
-
+            <button
+              type="button"
+              onClick={generatePerfectSummary}
+              className="ml-4 bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700"
+            >
+              Generate Perfect Summary
+            </button>
             <h1>Experiences</h1>
             {userData.experiences.map((exp, i) => (
               <div key={i}>
