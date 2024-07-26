@@ -188,7 +188,34 @@ const ResumeMaker = () => {
       }
       setIsLoading(false);
     };
+
     fetchData();
+
+    const handleMessage = async (event) => {
+      if (event.data.type === "GENERATE_SUMMARY") {
+        try {
+          const response = await axios.post(
+            "https://resumebackend-production.up.railway.app/generate-summary",
+            { description: event.data.description }
+          );
+          if (response.status === 200) {
+            setUserData((prevData) => ({
+              ...prevData,
+              summary: response.data.summary,
+            }));
+          }
+        } catch (error) {
+          console.error("Error generating summary:", error);
+          alert("Failed to generate summary. Please try again.");
+        }
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
   }, [resumeNumber, navigate]);
 
   const handleChange = (event, index, section) => {
@@ -511,28 +538,36 @@ const ResumeMaker = () => {
     return <div>Loading...</div>;
   }
 
-  const generatePerfectSummary = async () => {
-    try {
-      console.log(
-        "Data being sent to generate summary:",
-        JSON.stringify(userData, null, 2)
-      );
-      const response = await axios.post(
-        "https://resumebackend-production.up.railway.app/generate-summary",
-        userData
-      );
-      if (response.status === 200) {
-        setUserData({ ...userData, summary: response.data.summary });
-      }
-    } catch (error) {
-      console.error("Error generating summary:", error);
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-        console.error("Response status:", error.response.status);
-        console.error("Response headers:", error.response.headers);
-      }
-      alert("Failed to generate summary. Please try again.");
-    }
+  const generatePerfectSummary = () => {
+    const summaryWindow = window.open(
+      "",
+      "Summary Input",
+      "width=600,height=400"
+    );
+    summaryWindow.document.write(`
+      <html>
+        <head>
+          <title>Enter Job Description</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            textarea { width: 100%; height: 200px; margin-bottom: 10px; }
+            button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+          </style>
+        </head>
+        <body>
+          <h2>Enter Job Description</h2>
+          <textarea id="jobDescription" placeholder="Enter the job description here..."></textarea>
+          <button onclick="generateSummary()">Generate Summary</button>
+          <script>
+            function generateSummary() {
+              const description = document.getElementById('jobDescription').value;
+              window.opener.postMessage({ type: 'GENERATE_SUMMARY', description }, '*');
+              window.close();
+            }
+          </script>
+        </body>
+      </html>
+    `);
   };
 
   return (
