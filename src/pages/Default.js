@@ -1,152 +1,127 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import resumeIcon from "../Files/Resume_icon.png";
-import Cookies from "js-cookie";
-import api from "../api";
 import "../styles/Home.css";
 
 function Default() {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const userId = Cookies.get("userId");
-
-    if (userId) {
-      // Fetch user data from the backend
-      api
-        .get(`/users/${userId}`)
-        .then((response) => {
-          setUser(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-          Cookies.remove("userId");
-        });
+  const [activeClassDropdown, setActiveClassDropdown] = useState(null);
+  const [activeSubjectDropdown, setActiveSubjectDropdown] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  const toggleClassDropdown = (index) => {
+    if (activeClassDropdown === index) {
+      setActiveClassDropdown(null);
     } else {
-      console.log("No session or user ID found in cookies");
+      setActiveClassDropdown(index);
     }
-  }, []);
-
-  const handleLogout = () => {
-    api
-      .post("/logout/")
-      .then((response) => {
-        Cookies.remove("userId");
-        setUser(null);
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.error("Error logging out:", error);
-      });
+    // Close subject dropdown when switching classes
+    setActiveSubjectDropdown(null);
   };
+  
+  const toggleSubjectDropdown = (e, classIndex, subjectIndex) => {
+    e.stopPropagation(); // Prevent triggering the class dropdown toggle
+    
+    if (activeSubjectDropdown === `${classIndex}-${subjectIndex}`) {
+      setActiveSubjectDropdown(null);
+    } else {
+      setActiveSubjectDropdown(`${classIndex}-${subjectIndex}`);
+    }
+  };
+  
+  // Hebrew class names from א to ח
+  const hebrewClasses = ["כיתה א", "כיתה ב", "כיתה ג", "כיתה ד", "כיתה ה", "כיתה ו", "כיתה ז", "כיתה ח"];
+  
+  // Subjects
+  const Subjects = ["חומש", "גמרא", "משנה", 'תכ"ל', "טעמי המקרא", "נביא", "הלכה", "מעגל השנה", "פעילויות יצירות ואחר"];
 
+  // Information categories
+  const Information = ["דפי סיכום", "עבודות", "מבחנים", "אחר"];
+  
   return (
-    <div className="bg-blue-white">
-      <header className="absolute inset-x-0 top-0 z-50">
-        <nav
-          className="flex items-center justify-between p-6 lg:px-8"
-          aria-label="Global"
-        >
-          <div className="flex lg:flex-1">
-            <Link to="/" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
-              <img className="h-16 w-auto" src={resumeIcon} alt="" />
-            </Link>
-          </div>
-          <div className="flex lg:hidden">
-            <button
-              type="button"
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-            >
-              <span className="sr-only">Open main menu</span>
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                />
-              </svg>
-            </button>
-          </div>
-          <div className="hidden lg:flex lg:gap-x-12">
-            <Link
-              to="/ResumeMaker"
-              className="text-sm font-semibold leading-6 text-blue-gray"
-            >
-              Resume Maker
-            </Link>
-            <Link
-              to="/ResumeViewer"
-              className="text-sm font-semibold leading-6 text-blue-gray"
-            >
-              Resume Viewer
-            </Link>
-          </div>
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            {user ? (
-              <div>
-                <span className="text-sm font-semibold leading-6 text-blue-gray">
-                  Hello, {user.email}
-                </span>
-                <button
-                  onClick={handleLogout}
-                  className="ml-4 text-sm font-semibold leading-6 text-blue-gray"
-                >
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <Link
-                to="/login"
-                className="text-sm font-semibold leading-6 text-blue-gray"
-              >
-                Log in <span aria-hidden="true"></span>
-              </Link>
-            )}
-          </div>
-        </nav>
-        <div className="lg:hidden" role="dialog" aria-modal="true">
-          <div className="fixed inset-0 z-50"></div>
-          <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-blue-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
-            <div className="flex items-center justify-between">
-              <button
-                type="button"
-                className="-m-2.5 rounded-md p-2.5 text-gray-700"
-              >
-                <span className="sr-only">Close menu</span>
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-            <div className="mt-6 flow-root">
-              <div className="-my-6 divide-y divide-gray-500/10">
-                <div className="space-y-2 py-6"></div>
-              </div>
-            </div>
+    <div className="bg-white min-h-screen">
+      <header className="fixed w-full bg-white shadow-sm z-50" dir="rtl">
+        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+          <Link to="/" className="flex items-center space-x-3 space-x-reverse">
+            <img src="https://flowbite.com/docs/images/logo.svg" className="h-8" alt="Logo" />
+            <span className="self-center text-2xl font-semibold whitespace-nowrap text-gray-800">
+              רשת בני יוסף
+            </span>
+          </Link>
+          
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            type="button"
+            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+            aria-expanded={mobileMenuOpen}
+          >
+            <span className="sr-only">פתח תפריט</span>
+            <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15"/>
+            </svg>
+          </button>
+          
+          {/* Desktop and mobile menu */}
+          <div className={`${mobileMenuOpen ? 'block' : 'hidden'} w-full md:block md:w-auto`}>
+            <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-white md:flex-row md:space-x-8 md:space-x-reverse md:mt-0 md:border-0">
+              {hebrewClasses.map((className, classIndex) => (
+                <li key={classIndex} className="relative">
+                  <button
+                    onClick={() => toggleClassDropdown(classIndex)}
+                    className="flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto"
+                  >
+                    {className}
+                    <svg className="w-2.5 h-2.5 mr-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4"/>
+                    </svg>
+                  </button>
+                  
+                  {/* Class dropdown */}
+                  {activeClassDropdown === classIndex && (
+                    <div className="absolute z-10 font-normal bg-teal-50 divide-y divide-teal-100 rounded-lg shadow w-44 mt-2 right-0">
+                      <ul className="py-2 text-sm text-teal-800">
+                        {Subjects.map((subject, subjectIndex) => (
+                          <li key={subjectIndex} className="relative">
+                            <button
+                              onClick={(e) => toggleSubjectDropdown(e, classIndex, subjectIndex)}
+                              className="flex items-center justify-between w-full px-4 py-2 hover:bg-teal-100 text-right"
+                            >
+                              {subject}
+                              <svg className="w-2.5 h-2.5 mr-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4"/>
+                              </svg>
+                            </button>
+                            
+                            {/* Information dropdown (nested within subject) */}
+                            {activeSubjectDropdown === `${classIndex}-${subjectIndex}` && (
+                              <div className="absolute z-20 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-40 right-full top-0 mr-1">
+                                <ul className="py-2 text-sm text-gray-700">
+                                  {Information.map((info, infoIndex) => (
+                                    <li key={infoIndex}>
+                                      <Link 
+                                        to={`/class/${classIndex+1}/subject/${subjectIndex+1}/info/${infoIndex+1}`} 
+                                        className="block px-4 py-2 hover:bg-gray-100 text-right"
+                                      >
+                                        {info}
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </header>
 
-      <div className="relative isolate px-6 pt-14 lg:px-8">
+      {/* Hero section with proper spacing */}
+      <div className="relative isolate px-6 pt-24 lg:px-8">
         <div
           className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
           aria-hidden="true"
@@ -160,28 +135,15 @@ function Default() {
           ></div>
         </div>
         <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-          <div className="hidden sm:mb-8 sm:flex sm:justify-center"></div>
-          <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-blue-gray sm:text-6xl">
-              Create Your Perfect Resume Today!
+          <div className="text-center" dir="rtl">
+            <h1 className="text-4xl font-bold tracking-tight text-gray-800 sm:text-6xl">
+            ברוך הבא לאתר של רשת בני יוסף 
             </h1>
-            <p className="mt-6 text-lg leading-8 text-blue-gray">
-              Effortlessly build stunning resumes with our AI-powered resume
-              builder. Get started in seconds and land your dream job faster.
+            <p className="mt-6 text-lg leading-8 text-gray-600">
+              פה תוכלו למצוא מידע מקצועי הנלמד במוסדות בני יוסף
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Link
-                to="/ResumeMaker"
-                className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Create Your First Resume Now!
-              </Link>
-              <Link
-                to="/ResumeViewer"
-                className="text-sm font-semibold leading-6 text-blue-gray"
-              >
-                View Created Resumes <span aria-hidden="true">→</span>
-              </Link>
+
             </div>
           </div>
         </div>
