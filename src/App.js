@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Default from "./pages/Default";
 import Upload from "./pages/Upload";
 import LinksList from "./pages/LinksList";
-import NewTest from "./pages/NewTest";
+import Delete from "./pages/Delete";
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Default />} />
         <Route path="/Upload" element={<Upload />} />
-        <Route path="/NewTest" element={<NewTest />} />
+        <Route path="/Delete" element={<Delete />} />
         <Route path="/class/:classId/subject/:subjectId/info/:infoId" element={<LinksList />} />
       </Routes>
     </BrowserRouter>
