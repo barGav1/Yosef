@@ -79,105 +79,104 @@ export default function UploadLinkPage() {
         </div>
 
         <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-        <div className="bg-white min-h-screen px-4 pt-32" dir="rtl">
-      <div className="max-w-6xl mx-auto bg-gray-50 shadow rounded-lg p-6">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">העלאת קישור חדש</h2>
+        <div className="bg-white min-h-screen px-4 pt-10" dir="rtl">
+  <div className="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-8 border border-gray-200">
+    <h2 className="text-3xl font-bold mb-8 text-gray-800 text-center">העלאת קישור חדש</h2>
 
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-col lg:flex-row gap-4">
-
-            {/* Class Dropdown */}
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-1">כיתה</label>
-              <select
-                name="class"
-                value={formData.class}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md p-2 text-right"
-                required
-              >
-                <option value="">בחר כיתה</option>
-                {classes.map((c) => (
-                  <option key={c.class} value={c.class}>{c.name}</option>
-                ))}
-              </select>
-            </div>
-            
-            {/* Subject Dropdown */}
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-1">מקצוע</label>
-              <select
-                name="subject"
-                value={formData.subject}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md p-2 text-right"
-                required
-              >
-                <option value="">בחר מקצוע</option>
-                {subjects.map((s) => (
-                  <option key={s.subject} value={s.subject}>{s.name}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Type Dropdown */}
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-1">סוג</label>
-              <select
-                name="type"
-                value={formData.type}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md p-2 text-right"
-                required
-              >
-                <option value="">בחר סוג</option>
-                {types.map((t) => (
-                  <option key={t.type} value={t.type}>{t.name}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Link Input */}
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-1">כתובת הקישור (URL)</label>
-              <input
-                type="url"
-                name="link"
-                value={formData.link}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md p-2 text-right"
-                required
-              />
-            </div>            
-            
-            {/* name Input */}
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-1">שם הקובץ 
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md p-2 text-right"
-                required
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Class Dropdown */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">כיתה</label>
+          <select
+            name="class"
+            value={formData.class}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-right focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
           >
-            שלח
-          </button>
-        </form>
+            <option value="">בחר כיתה</option>
+            {classes.map((c) => (
+              <option key={c.class} value={c.class}>{c.name}</option>
+            ))}
+          </select>
+        </div>
 
-        {status && (
-          <p className="mt-4 text-center text-sm text-green-600">{status}</p>
-        )}
+        {/* Subject Dropdown */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">מקצוע</label>
+          <select
+            name="subject"
+            value={formData.subject}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-right focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
+          >
+            <option value="">בחר מקצוע</option>
+            {subjects.map((s) => (
+              <option key={s.subject} value={s.subject}>{s.name}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Type Dropdown */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">סוג</label>
+          <select
+            name="type"
+            value={formData.type}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-right focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
+          >
+            <option value="">בחר סוג</option>
+            {types.map((t) => (
+              <option key={t.type} value={t.type}>{t.name}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Link Input */}
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-1">כתובת הקישור (URL)</label>
+          <input
+            type="url"
+            name="link"
+            value={formData.link}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-right focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
+          />
+        </div>
+
+        {/* Name Input */}
+        <div className="md:col-span-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1">שם הקובץ</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-right focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
+          />
+        </div>
       </div>
-    </div>
+
+      <button
+        type="submit"
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200"
+      >
+        שלח
+      </button>
+
+      {status && (
+        <p className="text-center text-sm text-green-600 mt-4">{status}</p>
+      )}
+    </form>
+  </div>
+</div>
+
         </div>
 
         <div
